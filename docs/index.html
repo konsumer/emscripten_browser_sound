@@ -1,0 +1,27 @@
+<head>
+  <title>browser_sound demo</title>
+  <style>
+    body {
+      font: 1em sans-serif;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<h1>Click to hear a sound.</h1>
+
+<script type="module">
+import Mod from './browser_sound.mjs'
+
+window.addEventListener('click', async () => {
+  const mod = await Mod({
+    arguments: ["test.ogg"]
+  })
+  mod._main()
+})
+
+</script>
