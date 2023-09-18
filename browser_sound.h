@@ -40,6 +40,9 @@ float browser_sound_get_volume(browser_sound* sound);
 // get the seek-position of a sound
 float browser_sound_get_position(browser_sound* sound);
 
+// get the duration of the audio
+float browser_sound_get_duration (browser_sound* sound);
+
 
 EM_JS(char*, browser_sound_mime, (unsigned char* bytesPtr), {
   let mimetype = "application/octet-stream";
@@ -130,6 +133,13 @@ EM_JS(float, browser_sound_get_volume, (browser_sound* sound), {
 EM_JS(float, browser_sound_get_position, (browser_sound* sound), {
   if (Module.browser_sounds && Module.browser_sounds[sound]) {
     return Module.browser_sounds[sound].currentTime;
+  }
+  return -1;
+});
+
+EM_JS(float, browser_sound_get_duration, (browser_sound* sound), {
+  if (Module.browser_sounds && Module.browser_sounds[sound]) {
+    return Module.browser_sounds[sound].duration;
   }
   return -1;
 });

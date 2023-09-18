@@ -6,7 +6,7 @@
 browser_sound* sound;
 
 void print_info() {
-  printf("Position: %f\n", browser_sound_get_position(sound));
+  printf("Position: %f/%f\n", browser_sound_get_position(sound), browser_sound_get_duration(sound));
 }
 
 int main(int argc, char *argv[]) {
