@@ -6,7 +6,15 @@
 browser_sound* sound;
 
 void print_info() {
-  printf("Position: %f/%f\n", browser_sound_get_position(sound), browser_sound_get_duration(sound));
+  printf("Sound: %s, position: %f/%f\n", browser_sound_get_playing(sound) ? "playing" : "not playing", browser_sound_get_position(sound), browser_sound_get_duration(sound));
+}
+
+void EMSCRIPTEN_KEEPALIVE stop() {
+  browser_sound_stop(sound);
+}
+
+void EMSCRIPTEN_KEEPALIVE play() {
+  browser_sound_play(sound);
 }
 
 int main(int argc, char *argv[]) {

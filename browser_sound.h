@@ -44,6 +44,9 @@ float browser_sound_get_position(browser_sound* sound);
 float browser_sound_get_duration (browser_sound* sound);
 
 
+// Is the sound playing?
+bool browser_sound_get_playing (browser_sound* sound);
+
 EM_JS(char*, browser_sound_mime, (unsigned char* bytesPtr), {
   let mimetype = "application/octet-stream";
   const bytes = [...HEAPU8.subarray(bytesPtr, bytesPtr+6)].join();
@@ -142,6 +145,13 @@ EM_JS(float, browser_sound_get_duration, (browser_sound* sound), {
     return Module.browser_sounds[sound].duration;
   }
   return -1;
+});
+
+EM_JS(bool, browser_sound_get_playing, (browser_sound* sound), {
+  if (Module.browser_sounds && Module.browser_sounds[sound]) {
+    return !Module.browser_sounds[sound].paused;
+  }
+  return false;
 });
 
 #else

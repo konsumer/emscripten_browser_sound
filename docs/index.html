@@ -8,18 +8,39 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      user-select: none;
     }
   </style>
 </head>
 
-<h1>Click to hear a sound.</h1>
+<h1 id="directions">Click to hear a sound.</h1>
 
 <script type="module">
 import Mod from './browser_sound.mjs'
 
-window.addEventListener('click', async () => {
-  const mod = await Mod({ arguments: ["test.ogg"] })
-  mod._main()
-})
+let mod
+
+const handleTogglePlay = () => {
+  mod._play()
+  window.removeEventListener('click', handleTogglePlay)
+  window.addEventListener('click', handleToggle)
+   window.directions.innerText = 'Click to stop sound.'
+}
+
+const handleToggle = () => {
+  mod._stop()
+  window.removeEventListener('click', handleToggle)
+  window.addEventListener('click', handleTogglePlay)
+  window.directions.innerText = 'Click to hear a sound.'
+}
+
+const handleFirstClick = async () => {
+  mod = await Mod({ arguments: ["test.ogg"] })
+  window.removeEventListener('click', handleFirstClick)
+  window.addEventListener('click', handleToggle)
+  window.directions.innerText = 'Click to stop sound.'
+}
+
+window.addEventListener('click', handleFirstClick)
 
 </script>
