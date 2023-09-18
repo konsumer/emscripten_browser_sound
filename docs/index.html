@@ -20,16 +20,18 @@ import Mod from './browser_sound.mjs'
 
 let mod
 
+// this looks a little complicated, but I want to load/start the sound on first click, and after that toggle playing
+
 const handleTogglePlay = () => {
   mod._play()
   window.removeEventListener('click', handleTogglePlay)
-  window.addEventListener('click', handleToggle)
+  window.addEventListener('click', handleToggleStop)
    window.directions.innerText = 'Click to stop sound.'
 }
 
-const handleToggle = () => {
+const handleToggleStop = () => {
   mod._stop()
-  window.removeEventListener('click', handleToggle)
+  window.removeEventListener('click', handleToggleStop)
   window.addEventListener('click', handleTogglePlay)
   window.directions.innerText = 'Click to hear a sound.'
 }
@@ -37,7 +39,7 @@ const handleToggle = () => {
 const handleFirstClick = async () => {
   mod = await Mod({ arguments: ["test.ogg"] })
   window.removeEventListener('click', handleFirstClick)
-  window.addEventListener('click', handleToggle)
+  window.addEventListener('click', handleToggleStop)
   window.directions.innerText = 'Click to stop sound.'
 }
 
