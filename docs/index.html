@@ -18,9 +18,7 @@
 import Mod from './browser_sound.mjs'
 
 window.addEventListener('click', async () => {
-  const mod = await Mod({
-    arguments: ["test.ogg"]
-  })
+  const mod = await Mod({ arguments: ["test.ogg"] })
   mod._main()
 })
 
