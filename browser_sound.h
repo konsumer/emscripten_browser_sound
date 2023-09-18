@@ -13,6 +13,9 @@ browser_sound* browser_sound_load_from_memory(unsigned char* bytes, int byteSize
 // pull sound from a URL
 browser_sound* browser_sound_load_from_url(char* url);
 
+// unload a sound
+void browser_sound_unload(browser_sound* sound);
+
 // play a sound
 void browser_sound_play(browser_sound* sound);
 
@@ -39,17 +42,27 @@ int browser_sound_get_position(browser_sound* sound);
 
 
 EM_JS(char*, browser_sound_mime, (unsigned char* bytesPtr), {
-  printf("browser_sound_mime: not implemented\n");
-
-  return NULL;
+  let mimetype = "application/octet-stream";
+  const bytes = [...HEAPU8.subarray(bytesPtr, bytesPtr+6)].join();
+  if (bytes.startsWith('79,103,103,83')) {
+    mimeType = 'audio/ogg'
+  }
+  if (bytes.startsWith('82,73,70,70')) {
+    mimeType = 'audio/wav'
+  }
+  if (bytes.startsWith('255,251,255,243,255,242') || bytes.startsWith('73,68,51')) {
+    mimeType = 'audio/mp3'
+  }
+  // TODO: there are probly more magic-bytes to return here
+  return stringToNewUTF8(mimeType);
 });
 
 
 EM_JS(browser_sound*, browser_sound_load_from_memory, (unsigned char* bytesPtr, int byteSize), {
   Module.browser_sounds = Module.browser_sounds || [];
-  const mimeType = Module._browser_sound_mime(bytesPtr);
+  const type = UTF8ToString(Module._browser_sound_mime(bytesPtr));
   const a = new Audio();
-  a.src = URL.createObjectURL(new Blob([HEAPU8.subarray(bytesPtr, bytesPtr+byteSize)]));
+  a.src = URL.createObjectURL(new Blob([HEAPU8.subarray(bytesPtr, bytesPtr+byteSize)], { type }));
   Module.browser_sounds.push(a);
   return Module.browser_sounds.length - 1;
 });
@@ -60,6 +73,16 @@ EM_JS(browser_sound*, browser_sound_load_from_url, (char* UrlPtr), {
   a.src = UTF8ToString(UrlPtr);
   Module.browser_sounds.push(a);
   return Module.browser_sounds.length - 1;
+});
+
+EM_JS(void, browser_sound_unload, (browser_sound* sound), {
+  if (Module.browser_sounds && Module.browser_sounds[sound]) {
+    if (Module.browser_sounds[sound].src.startsWith('data')){
+      URL.revokeObjectURL(Module.browser_sounds[sound].src);
+    }
+    Module.browser_sounds[sound].pause();
+    delete Module.browser_sounds[sound];
+  }
 });
 
 EM_JS(void, browser_sound_play, (browser_sound* sound), {
