@@ -26,7 +26,7 @@ void browser_sound_stop(browser_sound* sound);
 void browser_sound_pause(browser_sound* sound) {}
 
 // seek to a specific position
-void browser_sound_seek(browser_sound* sound, int position);
+void browser_sound_seek(browser_sound* sound, float position);
 
 // enable/disable looping
 void browser_sound_loop(browser_sound* sound, bool loop);
@@ -38,7 +38,7 @@ void browser_sound_volume(browser_sound* sound, float volume);
 float browser_sound_get_volume(browser_sound* sound);
 
 // get the seek-position of a sound
-int browser_sound_get_position(browser_sound* sound);
+float browser_sound_get_position(browser_sound* sound);
 
 
 EM_JS(char*, browser_sound_mime, (unsigned char* bytesPtr), {
@@ -102,7 +102,7 @@ EM_JS(void, browser_sound_pause, (browser_sound* sound), {
   }
 });
 
-EM_JS(void, browser_sound_seek, (browser_sound* sound, int position), {
+EM_JS(void, browser_sound_seek, (browser_sound* sound, float position), {
   if (Module.browser_sounds && Module.browser_sounds[sound]) {
     Module.browser_sounds[sound].currentTime = position;
   }
@@ -127,7 +127,7 @@ EM_JS(float, browser_sound_get_volume, (browser_sound* sound), {
   return -1;
 });
 
-EM_JS(int, browser_sound_get_position, (browser_sound* sound), {
+EM_JS(float, browser_sound_get_position, (browser_sound* sound), {
   if (Module.browser_sounds && Module.browser_sounds[sound]) {
     return Module.browser_sounds[sound].currentTime;
   }
