@@ -61,16 +61,14 @@ EM_JS(char*, browser_sound_mime, (unsigned char* bytesPtr), {
 EM_JS(browser_sound*, browser_sound_load_from_memory, (unsigned char* bytesPtr, int byteSize), {
   Module.browser_sounds = Module.browser_sounds || [];
   const type = UTF8ToString(Module._browser_sound_mime(bytesPtr));
-  const a = new Audio();
-  a.src = URL.createObjectURL(new Blob([HEAPU8.subarray(bytesPtr, bytesPtr+byteSize)], { type }));
+  const a = new Audio(URL.createObjectURL(new Blob([HEAPU8.subarray(bytesPtr, bytesPtr+byteSize)], { type })));
   Module.browser_sounds.push(a);
   return Module.browser_sounds.length - 1;
 });
 
 EM_JS(browser_sound*, browser_sound_load_from_url, (char* UrlPtr), {
   Module.browser_sounds = Module.browser_sounds || [];
-  const a = new Audio();
-  a.src = UTF8ToString(UrlPtr);
+  const a = new Audio(UTF8ToString(UrlPtr));;
   Module.browser_sounds.push(a);
   return Module.browser_sounds.length - 1;
 });
