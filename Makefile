@@ -3,3 +3,7 @@ docs/browser_sound.mjs: tester.c browser_sound.h
 
 web: docs/browser_sound.mjs
 	emrun docs/index.html
+
+.PHONY: clean
+clean:
+	@rm -f docs/browser_sound.mjs docs/browser_sound.wasm
