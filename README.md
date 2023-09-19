@@ -9,3 +9,9 @@ make
 # test it
 make web
 ```
+
+## TODO
+
+- Test `browser_sound_mime` and `browser_sound_load_from_memory`
+- Use [this technique](https://github.com/veltman/loopify/blob/master/loopify.js) to make gapless looping (AudioContext)
+- Provide more AudioContext-related functions
